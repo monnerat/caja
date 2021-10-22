@@ -181,12 +181,15 @@ add_module_objects (CajaModule *module)
 
         if (module->list_pyfiles)
         {
-            filename = g_strconcat(g_list_nth_data(pyfiles, i), ".py", NULL);
+           char *py_filename = g_strconcat (g_list_nth_data (pyfiles, i), ".py", NULL);
+           g_free (filename);
+           filename = py_filename;
         }
 
         object = caja_module_add_type (types[i]);
         caja_extension_register (filename, object);
     }
+    g_free (filename);
 }
 
 static CajaModule *
@@ -231,6 +234,7 @@ load_module_dir (const char *dirname)
                                              name,
                                              NULL);
                 caja_module_load_file (filename);
+                g_free (filename);
             }
         }
         g_dir_close (dir);
